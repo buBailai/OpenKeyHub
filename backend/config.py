@@ -9,12 +9,13 @@ import secrets
 from pathlib import Path
 
 APP_DIR = Path(__file__).resolve().parent.parent          # 项目根
-DATA_DIR = APP_DIR / "data"
 FRONTEND_DIR = APP_DIR / "frontend"
+# 数据目录可用 OKH_DATA_DIR 覆盖（便于迁移备份 / 隔离测试，避免误删生产数据）
+DATA_DIR = Path(os.environ["OKH_DATA_DIR"]).expanduser() if os.environ.get("OKH_DATA_DIR") else APP_DIR / "data"
 DB_PATH = DATA_DIR / "openkeyhub.db"
 SECRET_PATH = DATA_DIR / "secret.key"
 
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def _load_dotenv() -> None:
