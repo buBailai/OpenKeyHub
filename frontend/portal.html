@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenKeyHub · 老师端</title>
+<link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+<div class="gate">
+  <div class="gate-card glass" id="card">
+
+    <!-- 登录 -->
+    <div id="vLogin">
+      <div class="brand-lg">
+        <div class="logo-dot"></div>
+        <h1>OpenKeyHub</h1>
+        <p class="sub">老师端 · 用手机号登录查看你的密钥</p>
+      </div>
+      <form id="loginForm" autocomplete="off">
+        <label>手机号</label>
+        <input id="pPhone" type="tel" placeholder="登录账号 = 手机号" autocomplete="username">
+        <label>密码</label>
+        <input id="pPass" type="password" placeholder="初始密码 openkeyhub" autocomplete="current-password">
+        <button class="btn-primary" type="submit">登录</button>
+        <p class="hint" id="pHint"></p>
+      </form>
+    </div>
+
+    <!-- 首次改密 -->
+    <div id="vChange" class="hidden">
+      <div class="brand-lg">
+        <div class="logo-dot"></div>
+        <h1>设置新密码</h1>
+        <p class="sub">首次登录请修改初始密码后再查看密钥</p>
+      </div>
+      <form id="changeForm" autocomplete="off">
+        <label>原密码</label>
+        <input id="cOld" type="password" placeholder="初始密码 openkeyhub" autocomplete="current-password">
+        <label>新密码（至少 6 位）</label>
+        <input id="cNew" type="password" placeholder="设置你的新密码" autocomplete="new-password">
+        <label>确认新密码</label>
+        <input id="cNew2" type="password" placeholder="再输入一次" autocomplete="new-password">
+        <button class="btn-primary" type="submit">保存并查看密钥</button>
+        <p class="hint" id="cHint"></p>
+      </form>
+    </div>
+
+    <!-- 密钥 -->
+    <div id="vKey" class="hidden">
+      <div class="brand-lg">
+        <div class="logo-dot"></div>
+        <h1 id="kName">我的密钥</h1>
+        <p class="sub">把下面两项填进你的 AI 客户端设置里</p>
+      </div>
+      <label class="kl">服务地址（Base URL）</label>
+      <div class="keybox krow"><div class="k" id="kBase"></div><button class="btn-mini cp" data-copy="kBase">复制</button></div>
+      <label class="kl">你的 API Key</label>
+      <div class="keybox krow"><div class="k" id="kKey"></div><button class="btn-mini cp" data-copy="kKey">复制</button></div>
+      <label class="kl">可用模型（填其一）</label>
+      <div class="prov-models" id="kModels"></div>
+      <div class="howto" id="kHow"></div>
+      <div class="acts" style="margin-top:18px">
+        <button class="btn-ghost" id="pChangePwd">修改密码</button>
+        <button class="btn-ghost" id="pLogout">退出</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="/static/portal.js?v=2"></script>
+</body>
+</html>

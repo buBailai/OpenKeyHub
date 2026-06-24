@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenKeyHub · API 共享网关</title>
+<link rel="stylesheet" href="/static/style.css?v=2">
+</head>
+<body>
+
+<!-- 登录 / 首次设置 -->
+<div id="gate" class="gate hidden">
+  <div class="gate-card glass">
+    <div class="brand-lg">
+      <div class="logo-dot"></div>
+      <h1>OpenKeyHub</h1>
+      <p class="sub" id="gateSub">学校统一配 Key，分发给老师</p>
+    </div>
+    <form id="gateForm" autocomplete="off">
+      <label>管理员账号</label>
+      <input id="gUser" type="text" placeholder="用户名" autocomplete="username">
+      <label>密码</label>
+      <input id="gPass" type="password" placeholder="密码" autocomplete="current-password">
+      <button class="btn-primary" id="gBtn" type="submit">登录</button>
+      <p class="hint" id="gHint"></p>
+    </form>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="app" class="hidden">
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <span class="name">OpenKeyHub</span>
+      <span class="ver" id="ver"></span>
+    </div>
+    <nav class="seg" id="nav">
+      <button data-tab="overview" class="on">概览</button>
+      <button data-tab="providers">厂家</button>
+      <button data-tab="models">模型</button>
+      <button data-tab="accounts">老师</button>
+      <button data-tab="logs">日志</button>
+    </nav>
+    <button class="btn-ghost" id="logoutBtn">退出</button>
+  </header>
+
+  <main id="main">
+    <!-- 概览 -->
+    <section data-view="overview" class="view">
+      <div class="cards" id="statCards"></div>
+      <div class="panel">
+        <div class="panel-h"><h3>各位老师调用情况</h3><span class="muted" id="acctSummaryHint"></span></div>
+        <div class="table-wrap"><table id="statTable"></table></div>
+      </div>
+      <div class="panel">
+        <div class="panel-h"><h3>按模型汇总</h3></div>
+        <div class="table-wrap"><table id="modelStatTable"></table></div>
+      </div>
+    </section>
+
+    <!-- 厂家 -->
+    <section data-view="providers" class="view hidden">
+      <div class="view-h">
+        <h2>厂家 API</h2>
+        <button class="btn-primary" id="addProviderBtn">+ 添加厂家</button>
+      </div>
+      <p class="muted">填好各家真实 Key，老师无需接触。模型在此添加后，会自动开放给老师调用。</p>
+      <div id="providerList" class="stack"></div>
+    </section>
+
+    <!-- 模型 -->
+    <section data-view="models" class="view hidden">
+      <div class="view-h">
+        <h2>模型路由</h2>
+        <button class="btn-primary" id="addModelBtn">+ 添加模型</button>
+      </div>
+      <p class="muted">「对外模型名」是老师在客户端填的模型；可映射到某厂家的真实模型名（做别名）。</p>
+      <div class="table-wrap panel"><table id="modelTable"></table></div>
+    </section>
+
+    <!-- 老师 -->
+    <section data-view="accounts" class="view hidden">
+      <div class="view-h">
+        <h2>老师账号</h2>
+        <div class="row-gap">
+          <button class="btn-ghost" id="importBtn">批量导入</button>
+          <button class="btn-primary" id="addAccountBtn">+ 新建老师</button>
+        </div>
+      </div>
+      <p class="muted">每位老师分配一个 Key。填了手机号的老师可在 <a id="portalLink" href="/portal" target="_blank">老师端登录页</a> 用手机号 + 默认密码 <b>openkeyhub</b> 自助查看 Key，无需单独分发。</p>
+      <div class="table-wrap panel"><table id="accountTable"></table></div>
+    </section>
+
+    <!-- 日志 -->
+    <section data-view="logs" class="view hidden">
+      <div class="view-h"><h2>调用日志</h2><button class="btn-ghost" id="refreshLogs">刷新</button></div>
+      <div class="table-wrap panel"><table id="logTable"></table></div>
+    </section>
+  </main>
+</div>
+
+<!-- 通用弹层 -->
+<div id="modalBg" class="modal-bg hidden">
+  <div class="modal glass" id="modal"></div>
+</div>
+
+<!-- 提示条 -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="/static/app.js?v=3"></script>
+</body>
+</html>

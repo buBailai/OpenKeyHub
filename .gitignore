@@ -1,0 +1,13 @@
+.venv/
+.venv.nosync/
+__pycache__/
+*.pyc
+.env
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/secret.key
+.DS_Store
+
+# 内部规划文档，不公开
+开发计划.md
