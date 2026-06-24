@@ -65,11 +65,34 @@ async function loadKey() {
   show('vKey');
 }
 
+// 复制：优先用 clipboard API（仅 https/localhost 安全上下文可用），
+// 否则退回 execCommand —— 老师多走局域网 http://IP，clipboard API 不可用。
+function copyText(txt) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(txt);
+  }
+  return new Promise((resolve, reject) => {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, txt.length);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    ok ? resolve() : reject(new Error('execCommand failed'));
+  });
+}
 document.addEventListener('click', e => {
   const id = e.target.dataset && e.target.dataset.copy;
   if (id) {
-    const txt = $('#' + id).textContent;
-    navigator.clipboard.writeText(txt).then(() => toast('已复制')).catch(() => toast('复制失败，请手动选择'));
+    copyText($('#' + id).textContent)
+      .then(() => toast('已复制'))
+      .catch(() => toast('复制失败，请长按 / 手动选择文本'));
   }
 });
 $('#pLogout').addEventListener('click', async () => { await api('/logout', {}); location.reload(); });

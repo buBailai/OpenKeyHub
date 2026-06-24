@@ -1,5 +1,9 @@
 # 更新日志
 
+## v1.0.1 · 2026-06-24
+
+- 修复：老师端「复制」按钮在通过局域网 `http://IP` 访问时失效（`navigator.clipboard` 仅在 https / localhost 安全上下文可用）。改为安全上下文走 clipboard API、否则回退 `execCommand`，局域网 http 下也能复制。
+
 ## v1.0.0 · 2026-06-24
 
 首个公开版本。一个轻量、通用的多租户 OpenAI 兼容 API 转发网关。
