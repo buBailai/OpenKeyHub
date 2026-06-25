@@ -58,8 +58,8 @@ button { font-family: inherit; cursor: pointer; border: none; font-size: 14px;
 .brand-lg { text-align: center; margin-bottom: 26px; }
 .brand-lg h1 { font-size: 26px; font-weight: 600; letter-spacing: -.5px; margin-top: 12px; }
 .brand-lg .sub { color: var(--ink2); font-size: 13.5px; margin-top: 6px; }
-.logo-dot { width: 38px; height: 38px; margin: 0 auto; border-radius: 12px; object-fit: cover; display: block;
-  background: linear-gradient(135deg, #0a84ff, #30d158); box-shadow: 0 6px 18px rgba(10,132,255,.35); }
+.logo-dot { width: 38px; height: 38px; margin: 0 auto; border-radius: 12px; object-fit: contain; display: block; padding: 10%;
+  background: #fff; border: 1px solid rgba(0,0,0,.1); box-shadow: 0 4px 14px rgba(0,0,0,.12); }
 #gateForm { display: flex; flex-direction: column; gap: 6px; }
 #gateForm label { font-size: 12.5px; color: var(--ink2); margin: 8px 2px 0; }
 input, textarea, select { font-family: inherit; font-size: 15px; color: var(--ink);
