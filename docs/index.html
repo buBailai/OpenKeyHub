@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OpenKeyHub · 学校统一配 Key，分发给老师</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <meta name="description" content="OpenKeyHub —— 一个轻量、通用的多租户 OpenAI 兼容 API 转发网关。学校统一配各家大模型 Key，给老师分发网关 Key；只转发不渲染，老师本机出片、不用自己掏钱。开源 · 本地部署。">
 <style>
 :root{
@@ -22,7 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","SF Pro Text","Pin
   background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-.logo-dot{width:var(--s,40px);height:var(--s,40px);border-radius:26%;
+.logo-dot{width:var(--s,40px);height:var(--s,40px);border-radius:26%;object-fit:cover;display:block;
   background:linear-gradient(135deg,#0a84ff,#30d158);box-shadow:0 8px 24px rgba(10,132,255,.35)}
 
 /* nav */
@@ -140,7 +142,7 @@ footer a:hover{color:var(--ink)}
 
 <nav>
   <div class="wrap">
-    <div class="logo-dot"></div>
+    <img class="logo-dot" src="icon.png" alt="OpenKeyHub">
     <b>OpenKeyHub</b>
     <div class="sp">
       <a class="btn line" href="#how">怎么用</a>
@@ -151,7 +153,7 @@ footer a:hover{color:var(--ink)}
 
 <header class="hero">
   <div class="wrap">
-    <div class="logo-dot"></div>
+    <img class="logo-dot" src="icon.png" alt="OpenKeyHub">
     <div class="eyebrow">开源 · 本地部署</div>
     <h1>学校统一配 Key，<br><span class="grad">分发给老师用</span></h1>
     <p class="lead">一个轻量、通用的多租户 <b>OpenAI 兼容 API 转发网关</b>。管理员配好各家大模型的真实 Key，给每位老师发一个网关 Key，老师们<b>不用自己掏钱</b>。</p>
@@ -274,7 +276,7 @@ footer a:hover{color:var(--ink)}
 
 <footer>
   <div class="wrap">
-    <div class="logo-dot" style="--s:22px"></div>
+    <img class="logo-dot" src="icon.png" alt="OpenKeyHub" style="--s:22px">
     <span>OpenKeyHub · MIT © buBailai</span>
     <div class="sp">
       <a href="https://github.com/buBailai/OpenKeyHub" target="_blank">GitHub</a>
