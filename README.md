@@ -14,6 +14,8 @@
   <img src="https://img.shields.io/badge/version-v1.0.1-5B5BD6" alt="v1.0.1">
 </p>
 
+🌐 **[在线介绍页 →](https://bubailai.github.io/OpenKeyHub/)**
+
 </div>
 
 ---
