@@ -8,8 +8,24 @@ import os
 import secrets
 from pathlib import Path
 
+from . import __version__
+
+APP_VERSION = __version__
+
 APP_DIR = Path(__file__).resolve().parent.parent          # 项目根
 FRONTEND_DIR = APP_DIR / "frontend"
+
+# 免安装包（portable）模式：启动器把 OKH_ROOT 设为包根目录；
+# 兜底：包根下有内置 python 运行时（python/python.exe 或 python/bin/python）也判定为便携包。
+PACKAGE_ROOT = os.environ.get("OKH_ROOT", "").strip() or (
+    str(APP_DIR) if (APP_DIR / "python" / "python.exe").exists()
+    or (APP_DIR / "python" / "bin" / "python").exists() else "")
+PORTABLE = bool(PACKAGE_ROOT)
+
+# 在线更新源：一个静态目录 URL，内含 version.json（+ 更新 zip）。
+# 开源版默认留空（自部署者不会误连到别人的更新源）；官方免安装包在打包时注入
+# 官方地址（或由启动器 / .env 设 OKH_UPDATE_URL）；管理员也可在后台改（存库，随数据保留）。
+DEFAULT_UPDATE_URL = os.environ.get("OKH_UPDATE_URL", "").rstrip("/")
 # 数据目录可用 OKH_DATA_DIR 覆盖（便于迁移备份 / 隔离测试，避免误删生产数据）
 DATA_DIR = Path(os.environ["OKH_DATA_DIR"]).expanduser() if os.environ.get("OKH_DATA_DIR") else APP_DIR / "data"
 DB_PATH = DATA_DIR / "openkeyhub.db"

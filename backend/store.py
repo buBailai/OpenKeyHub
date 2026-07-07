@@ -68,6 +68,10 @@ CREATE TABLE IF NOT EXISTS call_logs (
 CREATE INDEX IF NOT EXISTS idx_logs_account ON call_logs(account_id);
 CREATE INDEX IF NOT EXISTS idx_logs_created ON call_logs(created_at);
 CREATE INDEX IF NOT EXISTS idx_models_provider ON models(provider_id);
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT DEFAULT ''
+);
 """
 
 
@@ -111,6 +115,20 @@ def _now() -> str:
 
 def _rows(cur) -> list[dict]:
     return [dict(r) for r in cur.fetchall()]
+
+
+# ---------- settings（键值对，存更新源等运行时配置） ----------
+def get_setting(key: str, default: str = "") -> str:
+    with _conn() as c:
+        r = c.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+        return r["value"] if r else default
+
+
+def set_setting(key: str, value: str) -> None:
+    with _conn() as c:
+        c.execute("INSERT INTO settings(key, value) VALUES(?,?) "
+                  "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                  (key, value))
 
 
 # ---------- admins ----------

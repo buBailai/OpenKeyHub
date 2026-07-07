@@ -47,13 +47,13 @@ $('#gateForm').addEventListener('submit', async e => {
 function enterApp() {
   $('#app').classList.remove('hidden');
   fetch('/health').then(r => r.json()).then(d => { $('#ver').textContent = 'v' + d.version; }).catch(() => {});
-  const tabs = ['overview', 'providers', 'models', 'accounts', 'logs'];
+  const tabs = ['overview', 'providers', 'models', 'accounts', 'logs', 'update'];
   const start = location.hash.slice(1);
   switchTab(tabs.includes(start) ? start : 'overview');
 }
 window.addEventListener('hashchange', () => {
   const t = location.hash.slice(1);
-  if (['overview', 'providers', 'models', 'accounts', 'logs'].includes(t)) switchTab(t);
+  if (['overview', 'providers', 'models', 'accounts', 'logs', 'update'].includes(t)) switchTab(t);
 });
 $('#logoutBtn').addEventListener('click', async () => { await api('POST', '/logout'); location.reload(); });
 $('#nav').addEventListener('click', e => { if (e.target.dataset.tab) switchTab(e.target.dataset.tab); });
@@ -63,7 +63,7 @@ function switchTab(tab) {
   $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   $$('.view').forEach(v => v.classList.toggle('hidden', v.dataset.view !== tab));
   ({ overview: loadOverview, providers: loadProviders, models: loadModels,
-     accounts: loadAccounts, logs: loadLogs }[tab] || (() => {}))();
+     accounts: loadAccounts, logs: loadLogs, update: loadUpdate }[tab] || (() => {}))();
 }
 
 /* ---------- 概览 ---------- */
@@ -341,6 +341,76 @@ async function loadLogs() {
     </tr>`).join('') : emptyRow(6, '暂无调用记录'));
 }
 $('#refreshLogs').addEventListener('click', loadLogs);
+
+/* ---------- 在线更新 ---------- */
+let UPD_POLL = null;
+function updShow(id, on) { $(id).classList.toggle('hidden', !on); }
+function updMsg(t, kind) { const e = $('#updMsg'); e.textContent = t || ''; e.className = 'hint' + (kind ? ' ' + kind : ''); }
+
+async function loadUpdate() {
+  clearInterval(UPD_POLL); UPD_POLL = null;
+  updShow('#updDownload', false); updShow('#updApply', false); updShow('#updBarWrap', false);
+  $('#updNotes').innerHTML = ''; updMsg('');
+  let st;
+  try { st = await api('GET', '/update/status'); } catch (e) { updMsg(e.message, 'err'); return; }
+  $('#updCurVer').textContent = 'v' + st.version;
+  $('#updUrl').value = st.update_url && !st.update_url.includes('PLACEHOLDER') ? st.update_url : '';
+  $('#updEnvHint').textContent = st.portable
+    ? '当前为免安装包模式，支持一键重启升级。'
+    : '当前为开发/源码模式，仅能检查与下载，不执行自动替换（请手动更新代码）。';
+  if (st.state === 'downloading') { beginPoll(); }
+  else if (st.pending || st.state === 'ready') { updShow('#updApply', st.portable); updMsg(st.msg || '新版已就绪，可重启升级。', 'ok'); }
+}
+
+$('#updSaveSrc').addEventListener('click', async () => {
+  try { await api('POST', '/update/source', { update_url: $('#updUrl').value.trim() }); toast('更新源已保存'); }
+  catch (e) { toast(e.message); }
+});
+
+$('#updCheck').addEventListener('click', async () => {
+  updMsg('正在检查…'); $('#updNotes').innerHTML = ''; updShow('#updDownload', false); updShow('#updApply', false);
+  let r; try { r = await api('POST', '/update/check'); } catch (e) { updMsg(e.message, 'err'); return; }
+  if (!r.ok) { updMsg(r.msg || '检查失败', 'err'); return; }
+  if (!r.newer) { updMsg(`已是最新版本 v${r.current}`, 'ok'); return; }
+  updMsg(`发现新版本 v${r.latest}（当前 v${r.current}${r.size ? '，约 ' + (r.size / 1048576).toFixed(1) + ' MB' : ''}）`, 'ok');
+  if (r.notes) $('#updNotes').innerHTML = `<div class="upd-notes-h">更新内容</div><pre>${esc(r.notes)}</pre>`;
+  updShow('#updDownload', true);
+});
+
+$('#updDownload').addEventListener('click', async () => {
+  updShow('#updDownload', false);
+  try { await api('POST', '/update/download'); } catch (e) { updMsg(e.message, 'err'); updShow('#updDownload', true); return; }
+  beginPoll();
+});
+
+function beginPoll() {
+  updShow('#updBarWrap', true);
+  clearInterval(UPD_POLL);
+  UPD_POLL = setInterval(async () => {
+    let st; try { st = await api('GET', '/update/status'); } catch (e) { return; }
+    $('#updBar').style.width = (st.pct || 0) + '%';
+    updMsg(st.msg || '', st.state === 'error' ? 'err' : '');
+    if (st.state === 'error') { clearInterval(UPD_POLL); updShow('#updBarWrap', false); updShow('#updDownload', true); }
+    else if (st.state === 'ready') {
+      clearInterval(UPD_POLL); updShow('#updBarWrap', false);
+      if (st.portable) { updShow('#updApply', true); updMsg(st.msg || '新版已就绪，点击「重启完成升级」', 'ok'); }
+      else { updMsg('新版已下载到数据目录 updates/，请手动替换代码后重启。', 'ok'); }
+    }
+  }, 800);
+}
+
+$('#updApply').addEventListener('click', async () => {
+  if (!confirm('确定重启并完成升级？服务会短暂中断约 10 秒。')) return;
+  updShow('#updApply', false); updMsg('正在重启升级，约 10 秒后自动刷新…');
+  try { await api('POST', '/update/apply'); } catch (e) { /* 主进程会退出，请求可能不返回，正常 */ }
+  let tries = 0;
+  const wait = setInterval(async () => {
+    tries++;
+    try { const h = await fetch('/health'); if (h.ok) { clearInterval(wait); location.reload(); } }
+    catch (e) {}
+    if (tries > 40) { clearInterval(wait); updMsg('升级完成后请手动刷新页面。', 'ok'); }
+  }, 1500);
+});
 
 /* ---------- 工具 ---------- */
 function emptyRow(cols, text) { return `<tr><td colspan="${cols}" style="text-align:center;padding:30px" class="muted">${text}</td></tr>`; }

@@ -14,3 +14,6 @@ data/secret.key
 
 # 打包产物
 *.zip
+
+# 发布暂存目录（成品在阿里云 downloads/，不入库）
+release-1.1.0/

@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import __version__, admin, config, gateway, portal, store
+from . import __version__, admin, config, gateway, portal, store, update
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ def health():
 app.include_router(gateway.router)
 app.include_router(admin.router)
 app.include_router(portal.router)
+app.include_router(update.router)
 
 
 @app.get("/")

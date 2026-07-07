@@ -11,7 +11,7 @@
 <p>
   <img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="MIT">
   <img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="Python 3.10+">
-  <img src="https://img.shields.io/badge/version-v1.0.2-5B5BD6" alt="v1.0.2">
+  <img src="https://img.shields.io/badge/version-v1.1.0-5B5BD6" alt="v1.1.0">
 </p>
 
 🌐 **[在线介绍页 →](https://bubailai.github.io/OpenKeyHub/)**
@@ -36,6 +36,7 @@
 - **老师自助门户** —— 老师在 `/portal` 用**手机号 + 默认密码**登录，首登强制改密后自助查看自己的 Key，管理员无需逐个分发；忘记密码可一键重置。
 - **调用统计** —— 每位老师调用次数、按模型汇总、token 用量（尽力统计）、调用日志。
 - **可选限额/限速** —— 默认不限制，可按账号单独开。
+- **在线更新** —— 后台「更新」页一键检查 / 下载 / 重启升级；只换程序本体，数据与配置原样保留，升级前自动备份可回滚。
 - **苹果风后台** —— 浅色、圆角、毛玻璃，自适应深色模式，开箱即用。
 - **轻** —— FastAPI + SQLite + 4 个依赖，本地部署一条命令起，数据全在本地。
 

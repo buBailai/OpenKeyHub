@@ -179,3 +179,19 @@ select { appearance: none; background-image:
   .seg { order: 3; width: 100%; overflow-x: auto; margin: 6px 0 0; }
   .topbar { flex-wrap: wrap; }
 }
+
+/* ---------- 在线更新 ---------- */
+[data-view="update"] .panel { margin-top: 14px; }
+.upd-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.upd-row input { flex: 1; min-width: 240px; }
+[data-view="update"] .hint { text-align: left; margin-top: 12px; }
+.hint.ok { color: var(--green); }
+.upd-bar { height: 8px; background: rgba(120,120,128,.16); border-radius: 980px;
+  overflow: hidden; margin-top: 12px; }
+.upd-bar-in { height: 100%; width: 0; background: var(--blue); border-radius: 980px;
+  transition: width .3s ease; }
+.upd-notes { margin-top: 12px; }
+.upd-notes-h { font-size: 13px; color: var(--ink2); margin-bottom: 6px; }
+.upd-notes pre { background: var(--bg); border: 1px solid var(--line);
+  border-radius: var(--radius-s); padding: 12px 14px; font-size: 13px;
+  line-height: 1.6; white-space: pre-wrap; word-break: break-word; }

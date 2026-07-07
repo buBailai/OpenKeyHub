@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OpenKeyHub · API 共享网关</title>
 <link rel="icon" type="image/png" href="/static/icon.png">
-<link rel="stylesheet" href="/static/style.css?v=4">
+<link rel="stylesheet" href="/static/style.css?v=5">
 </head>
 <body>
 
@@ -42,6 +42,7 @@
       <button data-tab="models">模型</button>
       <button data-tab="accounts">老师</button>
       <button data-tab="logs">日志</button>
+      <button data-tab="update">更新</button>
     </nav>
     <button class="btn-ghost" id="logoutBtn">退出</button>
   </header>
@@ -98,6 +99,33 @@
       <div class="view-h"><h2>调用日志</h2><button class="btn-ghost" id="refreshLogs">刷新</button></div>
       <div class="table-wrap panel"><table id="logTable"></table></div>
     </section>
+
+    <!-- 更新 -->
+    <section data-view="update" class="view hidden">
+      <div class="view-h"><h2>在线更新</h2><span class="ver" id="updCurVer"></span></div>
+      <p class="muted">检查并一键升级到新版本。<b>仅免安装包</b>支持一键重启升级；升级只替换程序本体，你的厂家 / 老师 / 调用数据（<code>data/</code>）与配置（<code>.env</code>）都会保留。</p>
+
+      <div class="panel">
+        <div class="panel-h"><h3>更新源</h3></div>
+        <div class="upd-row">
+          <input id="updUrl" type="text" placeholder="https://…/openkeyhub（内含 version.json）">
+          <button class="btn-ghost" id="updSaveSrc">保存</button>
+        </div>
+        <p class="muted" id="updEnvHint"></p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h3>版本</h3></div>
+        <div class="upd-row">
+          <button class="btn-primary" id="updCheck">检查更新</button>
+          <button class="btn-primary hidden" id="updDownload">下载更新</button>
+          <button class="btn-primary hidden" id="updApply">重启完成升级</button>
+        </div>
+        <p class="hint" id="updMsg"></p>
+        <div class="upd-bar hidden" id="updBarWrap"><div class="upd-bar-in" id="updBar"></div></div>
+        <div id="updNotes" class="upd-notes"></div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -109,6 +137,6 @@
 <!-- 提示条 -->
 <div id="toast" class="toast hidden"></div>
 
-<script src="/static/app.js?v=3"></script>
+<script src="/static/app.js?v=4"></script>
 </body>
 </html>
