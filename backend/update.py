@@ -84,10 +84,18 @@ def _fetch_json(url: str) -> dict:
         return json.loads(r.read().decode("utf-8"))
 
 
+def _source_override() -> str:
+    """管理员在后台自填的更新源（存库）。内置官方默认源【不算】——不外显以免暴露服务器地址。"""
+    return (store.get_setting("update_url") or "").rstrip("/")
+
+
 @router.get("/status")
 def status(_: int = Depends(admin.require_admin)):
     return {"version": config.APP_VERSION, "portable": config.PORTABLE,
-            "update_url": _update_url(),
+            # 只回管理员自填的源；内置官方源（可能含服务器 IP）不下发给前端，避免暴露。
+            "update_url": _source_override(),
+            # 有内置默认或已自填源即可检查更新（不泄露具体地址）。
+            "source_ready": bool(_update_url()),
             "pending": (_new_dir() / "backend" / "main.py").exists(),
             **{k: STATE[k] for k in ("state", "pct", "msg")}}
 
@@ -95,7 +103,9 @@ def status(_: int = Depends(admin.require_admin)):
 @router.post("/source")
 def save_source(body: SourceIn, _: int = Depends(admin.require_admin)):
     store.set_setting("update_url", body.update_url.strip().rstrip("/"))
-    return {"ok": True, "update_url": _update_url()}
+    # 同样只回自填值（清空后不回落到内置默认，避免把内置源地址显示出来）。
+    return {"ok": True, "update_url": _source_override(),
+            "source_ready": bool(_update_url())}
 
 
 @router.post("/check")

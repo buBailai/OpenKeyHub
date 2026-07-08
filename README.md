@@ -11,7 +11,7 @@
 <p>
   <img src="https://img.shields.io/badge/license-MIT-brightgreen" alt="MIT">
   <img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="Python 3.10+">
-  <img src="https://img.shields.io/badge/version-v1.1.0-5B5BD6" alt="v1.1.0">
+  <img src="https://img.shields.io/badge/version-v1.1.1-5B5BD6" alt="v1.1.1">
 </p>
 
 🌐 **[在线介绍页 →](https://bubailai.github.io/OpenKeyHub/)**

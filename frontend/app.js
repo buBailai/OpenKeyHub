@@ -354,10 +354,15 @@ async function loadUpdate() {
   let st;
   try { st = await api('GET', '/update/status'); } catch (e) { updMsg(e.message, 'err'); return; }
   $('#updCurVer').textContent = 'v' + st.version;
-  $('#updUrl').value = st.update_url && !st.update_url.includes('PLACEHOLDER') ? st.update_url : '';
-  $('#updEnvHint').textContent = st.portable
+  // 只显示管理员自填的源；内置官方源地址隐藏（不暴露服务器地址）。
+  $('#updUrl').value = st.update_url || '';
+  const srcHint = (st.source_ready && !st.update_url)
+    ? '正在使用内置的官方更新源（地址已隐藏）。如自行部署，可在上方填写你自己的更新源并保存。'
+    : (st.source_ready ? '' : '尚未配置更新源：请在上方填写更新源地址（含 version.json）并保存。');
+  const modeHint = st.portable
     ? '当前为免安装包模式，支持一键重启升级。'
     : '当前为开发/源码模式，仅能检查与下载，不执行自动替换（请手动更新代码）。';
+  $('#updEnvHint').textContent = (srcHint ? srcHint + ' ' : '') + modeHint;
   if (st.state === 'downloading') { beginPoll(); }
   else if (st.pending || st.state === 'ready') { updShow('#updApply', st.portable); updMsg(st.msg || '新版已就绪，可重启升级。', 'ok'); }
 }
